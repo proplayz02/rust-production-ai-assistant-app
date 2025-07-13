@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mongo-secret
+stringData:
+  mongo-root-username: "admin"
+  mongo-root-password: "changeMeStrong"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+  labels:
+    app: mongo
+spec:
+  ports:
+  - port: 27017
+    targetPort: 27017
+  clusterIP: None # Headless service for StatefulSet
+  selector:
+    app: mongo
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+spec:
+  serviceName: "mongo"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - name: mongo
+        image: mongo:6.0
+        ports:
+        - containerPort: 27017
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secret
+              key: mongo-root-username
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secret
+              key: mongo-root-password
+        volumeMounts:
+        - name: mongo-persistent-storage
+          mountPath: /data/db
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "1Gi"
+      volumes: []
+  volumeClaimTemplates:
+  - metadata:
+      name: mongo-persistent-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "gp2"
+      resources:
+        requests:
+          storage: 10Gi

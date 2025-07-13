@@ -1,0 +1,45 @@
+# Rust
+/backend/target/
+**/*.rs.bk
+Cargo.lock
+
+# Node.js
+/frontend/node_modules/
+/frontend/.next/
+/frontend/.env*
+
+# Python
+/tts/tts_env/
+/tts/__pycache__/
+/tts/*.pyc
+/tts/.env*
+
+# General
+*.log
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
+.env*
+
+# Docker
+**/tmp/
+**/dist/
+**/build/
+**/.docker/
+**/docker-compose.override.yml
+
+# Test & Coverage
+coverage/
+*.lcov
+*.coverage
+/test_tts.wav
+
+# Kubernetes
+*.bak
+*.old
+
+# VSCode & IDE
+.vscode/
+.idea/
+*.code-workspace 

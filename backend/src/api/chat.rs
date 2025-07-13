@@ -48,6 +48,16 @@ fn filter_ai_response(user_message: &str, ai_response: &str) -> String {
     ai_response.to_string()
 }
 
+fn validate_and_sanitize_message(msg: &str) -> Option<String> {
+    let trimmed = msg.trim();
+    if trimmed.is_empty() || trimmed.len() > 1000 {
+        return None;
+    }
+    // Remove control characters (except newlines)
+    let sanitized: String = trimmed.chars().filter(|c| c.is_ascii_graphic() || c.is_ascii_whitespace()).collect();
+    Some(sanitized)
+}
+
 pub async fn chat_handler(
     State(state): State<AppState>,
     Json(payload): Json<ChatRequest>,
@@ -55,6 +65,15 @@ pub async fn chat_handler(
     use mongodb::bson::DateTime as MongoDateTime;
 
     log::info!("Received chat request: {}", payload.message);
+
+    // Input validation and sanitization
+    let sanitized_message = match validate_and_sanitize_message(&payload.message) {
+        Some(msg) => msg,
+        None => {
+            log::warn!("Rejected invalid chat message");
+            return Err(StatusCode::BAD_REQUEST);
+        }
+    };
 
     let system_prompt = payload.system_prompt.unwrap_or_else(|| {
         r#"You are a helpful AI doctor assistant. You must only answer questions that are strictly about medical or health topics. If a user asks about anything outside of medicine or health, politely refuse and explain that you can only assist with medical and health-related questions. Always provide accurate, helpful medical information while being clear that you are an AI and not a replacement for professional medical advice. Be concise but thorough in your responses."#.to_string()
@@ -64,12 +83,12 @@ pub async fn chat_handler(
     let user_doc = ChatMessageDoc {
         id: None,
         role: "user".to_string(),
-        content: payload.message.clone(),
+        content: sanitized_message.clone(),
         timestamp: std::time::SystemTime::now().into(),
     };
     let _ = state.chat_collection.insert_one(user_doc, None).await;
 
-    let ai_result = state.client.generate(payload.message, Some(system_prompt)).await;
+    let ai_result = state.client.generate(sanitized_message, Some(system_prompt)).await;
 
     match ai_result {
         Ok(response) => {

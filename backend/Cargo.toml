@@ -17,7 +17,7 @@ futures-util = "0.3"
 mongodb = { version = "2.8", features = ["tokio-runtime"] }
 thiserror = "1.0"
 ollama-rs = "0.1.7"
-tower-http = { version = "0.5", features = ["cors"] }
+tower-http = { version = "0.5", features = ["cors", "limit"] }
 log = "0.4"
 env_logger = "0.10"
 chrono = "0.4"

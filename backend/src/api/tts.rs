@@ -9,13 +9,35 @@ pub struct TtsRequest {
     pub voice: Option<String>,
 }
 
+fn validate_and_sanitize_tts_text(text: &str) -> Option<String> {
+    let trimmed = text.trim();
+    if trimmed.is_empty() || trimmed.len() > 500 {
+        return None;
+    }
+    // Remove control characters (except newlines)
+    let sanitized: String = trimmed.chars().filter(|c| c.is_ascii_graphic() || c.is_ascii_whitespace()).collect();
+    Some(sanitized)
+}
+
 pub async fn tts_handler(Json(payload): Json<TtsRequest>) -> Response {
+    // Input validation and sanitization
+    let sanitized_text = match validate_and_sanitize_tts_text(&payload.text) {
+        Some(txt) => txt,
+        None => {
+            log::warn!("Rejected invalid TTS text");
+            return Response::builder()
+                .status(StatusCode::BAD_REQUEST)
+                .header(header::CONTENT_TYPE, "application/json")
+                .body(Body::from(r#"{\"error\": \"Invalid TTS text\"}"#))
+                .unwrap();
+        }
+    };
     // TTS server URL
     let tts_url = "http://localhost:5002/api/tts";
     let client = Client::new();
     let res = client
         .post(tts_url)
-        .json(&payload)
+        .json(&TtsRequest { text: sanitized_text, voice: payload.voice })
         .send()
         .await;
 

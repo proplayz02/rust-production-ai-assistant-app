@@ -391,6 +391,56 @@ kubectl apply -f k8s/ingress.yaml
 
 ---
 
+## Roadmap: Security Features
+
+The following security features are planned or in progress to ensure the safety, privacy, and robustness of the Resilient AI Agent platform:
+
+- **Authentication & Authorization**
+  - Add user authentication (OAuth2, JWT, or SSO integration)
+  - Role-based access control for sensitive endpoints (e.g., admin, doctor, patient)
+- **API Security**
+  - Rate limiting and abuse prevention on all public endpoints
+  - Input validation and sanitization to prevent injection attacks
+  - CORS policy hardening for production
+- **Data Protection**
+  - Encrypt sensitive data at rest (MongoDB encryption)
+  - Encrypted secrets management (Kubernetes Secrets, Docker secrets)
+  - Secure handling of environment variables and API keys
+- **Transport Security**
+  - Enforce HTTPS everywhere (Ingress, frontend, backend)
+  - Automatic TLS certificate management (cert-manager)
+- **Audit & Monitoring**
+  - Structured, tamper-resistant logging for all services
+  - Audit trails for user actions and admin operations
+  - Integration with monitoring/alerting (Prometheus, Grafana, Sentry)
+- **Vulnerability Management**
+  - Automated dependency scanning (GitHub Dependabot, cargo audit, npm audit)
+  - Regular security updates for all base images and dependencies
+- **Privacy & Compliance**
+  - Data retention and deletion policies (user chat history, logs)
+  - GDPR/CCPA compliance roadmap
+- **AI Safety**
+  - Prompt injection mitigation and output filtering
+  - Guardrails to prevent unsafe or non-medical advice
+
+*Contributions and suggestions for additional security features are welcome!*
+
+---
+
+## Data Protection
+
+- **MongoDB Encryption at Rest**: For production, enable MongoDB's encryption at rest (see [MongoDB docs](https://www.mongodb.com/docs/manual/core/security-encryption-at-rest/)). The provided `mongo-statefulset.yaml` is ready for use with encrypted storage classes and can be extended to enable encryption options.
+- **Kubernetes Secrets**: All sensitive credentials (MongoDB root password, Ollama API key, etc.) are managed via Kubernetes Secrets and never hardcoded. See `k8s/mongo-statefulset.yaml` and `k8s/backend-deployment.yaml` for examples.
+- **Environment Variables**: The backend loads all secrets and sensitive config from environment variables, never from code or public files. This includes database URIs and API keys.
+- **Docker Secrets**: For Docker Compose or Swarm, use Docker secrets for production deployments to avoid exposing secrets in environment variables.
+
+**Best Practices:**
+- Always rotate secrets regularly and never commit them to version control.
+- Use encrypted storage (EBS, etc.) for all persistent data in production.
+- Review and restrict access to secrets in your cloud provider and Kubernetes cluster.
+
+---
+
 ## License
 
 MIT 

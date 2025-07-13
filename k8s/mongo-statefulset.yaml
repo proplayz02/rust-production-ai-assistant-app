@@ -8,6 +8,16 @@ stringData:
   mongo-root-password: "changeMeStrong"
 ---
 apiVersion: v1
+kind: Secret
+metadata:
+  name: mongo-encryption-key
+stringData:
+  keyfile: |
+    # Generate a 96-byte base64 key for MongoDB encryption at rest
+    # Example: openssl rand -base64 756 > keyfile
+    c2VjcmV0LW1vbmdvLWtleS1mb3ItZW5jcnlwdGlvbi1hdC1yZXN0LXN1cGVyLXN0cm9uZy1rZXktdXNlLW9wZW5zc2wK
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: mongo
@@ -52,9 +62,15 @@ spec:
             secretKeyRef:
               name: mongo-secret
               key: mongo-root-password
+        args:
+        - --enableEncryption
+        - --encryptionKeyFile=/etc/mongo-keyfile/keyfile
         volumeMounts:
         - name: mongo-persistent-storage
           mountPath: /data/db
+        - name: mongo-encryption-key
+          mountPath: /etc/mongo-keyfile
+          readOnly: true
         resources:
           requests:
             cpu: "100m"
@@ -62,7 +78,10 @@ spec:
           limits:
             cpu: "500m"
             memory: "1Gi"
-      volumes: []
+      volumes:
+      - name: mongo-encryption-key
+        secret:
+          secretName: mongo-encryption-key
   volumeClaimTemplates:
   - metadata:
       name: mongo-persistent-storage

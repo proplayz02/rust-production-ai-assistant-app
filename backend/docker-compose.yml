@@ -7,7 +7,11 @@ services:
     ports:
       - "3001:3001"
     environment:
-      - MONGODB_URI=mongodb://mongo:27017
+      - RUST_LOG=info
+    secrets:
+      - mongodb_uri
+      - tts_url
+      - ollama_api_key
     depends_on:
       - mongo
       - tts
@@ -35,8 +39,22 @@ services:
     image: mongo:6.0
     ports:
       - "27017:27017"
+    secrets:
+      - mongo_root_password
+      - mongo_encryption_key
     networks:
       - resilient
+secrets:
+  mongodb_uri:
+    file: ./secrets/mongodb_uri.txt
+  tts_url:
+    file: ./secrets/tts_url.txt
+  ollama_api_key:
+    file: ./secrets/ollama_api_key.txt
+  mongo_root_password:
+    file: ./secrets/mongo_root_password.txt
+  mongo_encryption_key:
+    file: ./secrets/mongo_encryption_key.txt
 networks:
   resilient:
     driver: bridge 

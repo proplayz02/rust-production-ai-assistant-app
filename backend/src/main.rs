@@ -21,8 +21,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     init_logging();
     log::info!("Starting AI Doctor Assistant API server...");
 
+    // Secure secret checks
+    let mongo_uri = std::env::var("MONGODB_URI").unwrap_or_default();
+    let tts_url = std::env::var("TTS_URL").unwrap_or_default();
+    let ollama_api_key = std::env::var("OLLAMA_API_KEY").unwrap_or_default();
+    if mongo_uri.is_empty() || mongo_uri == "mongodb://mongo:27017" {
+        log::error!("MONGODB_URI is missing or set to default! Refusing to start.");
+        std::process::exit(1);
+    }
+    if tts_url.is_empty() || tts_url == "http://tts:5002" {
+        log::warn!("TTS_URL is missing or set to default. TTS may not work as expected.");
+    }
+    if ollama_api_key.is_empty() || ollama_api_key == "your-ollama-api-key-here" {
+        log::warn!("OLLAMA_API_KEY is missing or set to default. Ollama API access may fail.");
+    }
+
     // MongoDB setup
-    let mongo_uri = std::env::var("MONGODB_URI").unwrap_or_else(|_| "mongodb://localhost:27017".to_string());
     let mongo_client = mongodb::Client::with_uri_str(&mongo_uri).await?;
     let db = mongo_client.database("ai_doctor");
     let chat_collection = db.collection::<ChatMessageDoc>("chats");

@@ -1,3 +1,4 @@
+# Author: Phil Odinga <me@philodi.com>
 flask==2.3.3
 flask-cors==4.0.0
 pyttsx3==2.90 

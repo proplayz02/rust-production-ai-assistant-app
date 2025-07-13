@@ -1,3 +1,4 @@
+# Author: Phil Odinga <me@philodi.com>
 apiVersion: v1
 kind: Secret
 metadata:

@@ -1,5 +1,7 @@
 # Resilient AI Agent
 
+Resilient AI Agent is a full-stack, production-ready AI Doctor Assistant platform. It features a Rust backend (Axum, MongoDB, Ollama with Llama3 and other models, circuit breaker, retry, logging), a modern Next.js frontend (Tailwind, shadcn/ui), and a Python-based TTS microservice. The system is robust, modular, and cloud-native, with Docker and Kubernetes support for scalable, secure deployments. It is designed for LAN and cloud, with browser and server TTS fallback, and a clean, accessible chat UI.
+
 ## Project Structure
 
 ```
@@ -350,19 +352,12 @@ stringData:
 
 ---
 
-## License
-
-MIT 
-
----
-
 ## Kubernetes Production Deployment (AWS/EKS Example)
 
 The `k8s/` directory now contains manifests for a full production deployment:
 
 - `mongo-statefulset.yaml`: MongoDB StatefulSet with persistent EBS storage and secret
-- `ollama-deployment.yaml`: Ollama model server with persistent EBS storage and secret
-- `llama-deployment.yaml`: Llama model server (optional, separate from Ollama) with persistent EBS storage and secret
+- `ollama-deployment.yaml`: Ollama model server with persistent EBS storage and secret (preloads and serves Llama3 model automatically)
 - `backend-deployment.yaml`: Rust backend API
 - `frontend-deployment.yaml`: Next.js frontend
 - `tts-deployment.yaml`: Python TTS microservice
@@ -377,14 +372,13 @@ The `k8s/` directory now contains manifests for a full production deployment:
 ```sh
 kubectl apply -f k8s/mongo-statefulset.yaml
 kubectl apply -f k8s/ollama-deployment.yaml
-kubectl apply -f k8s/llama-deployment.yaml # optional, if using separate Llama
 kubectl apply -f k8s/backend-deployment.yaml
 kubectl apply -f k8s/tts-deployment.yaml
 kubectl apply -f k8s/frontend-deployment.yaml
 kubectl apply -f k8s/ingress.yaml
 ```
 
-- All persistent data (MongoDB, Ollama, Llama models) will be stored on EBS volumes.
+- All persistent data (MongoDB, Ollama models) will be stored on EBS volumes.
 - Secrets for database and model API keys are managed as Kubernetes secrets.
 - Ingress provides HTTPS access to the frontend and API (edit `ingress.yaml` for your domain).
 
@@ -394,6 +388,9 @@ kubectl apply -f k8s/ingress.yaml
 - **TTS API:** internal service `tts:5002`
 - **MongoDB:** internal service `mongo:27017`
 - **Ollama:** internal service `ollama:11434`
-- **Llama:** internal service `llama:11435`
 
---- 
+---
+
+## License
+
+MIT 

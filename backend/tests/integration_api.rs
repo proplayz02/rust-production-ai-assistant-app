@@ -40,4 +40,35 @@ async fn test_chat_endpoint() {
     let json: serde_json::Value = resp.json().await.unwrap();
     assert!(json["success"].as_bool().unwrap_or(false));
     assert!(json["response"].as_str().unwrap_or("").contains("hypertension"));
+}
+
+#[tokio::test]
+async fn test_non_medical_question_is_refused() {
+    let client = Client::new();
+    let payload = serde_json::json!({
+        "message": "What is the capital of France?"
+    });
+    let resp = client.post("http://localhost:3001/api/chat")
+        .json(&payload)
+        .send().await.unwrap();
+    assert!(resp.status().is_success());
+    let json: serde_json::Value = resp.json().await.unwrap();
+    let response = json["response"].as_str().unwrap_or("");
+    assert!(response.to_lowercase().contains("medical") || response.to_lowercase().contains("health"));
+    assert!(response.to_lowercase().contains("only") || response.to_lowercase().contains("cannot"));
+}
+
+#[tokio::test]
+async fn test_medical_question_is_answered() {
+    let client = Client::new();
+    let payload = serde_json::json!({
+        "message": "What is hypertension?"
+    });
+    let resp = client.post("http://localhost:3001/api/chat")
+        .json(&payload)
+        .send().await.unwrap();
+    assert!(resp.status().is_success());
+    let json: serde_json::Value = resp.json().await.unwrap();
+    let response = json["response"].as_str().unwrap_or("");
+    assert!(response.to_lowercase().contains("hypertension") || response.to_lowercase().contains("blood pressure"));
 } 

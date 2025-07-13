@@ -7,6 +7,46 @@ use crate::retry::retry_async_with_backoff;
 use mongodb::bson::doc;
 use futures_util::stream::StreamExt;
 use std::time::Duration;
+use regex::Regex;
+
+fn filter_ai_response(user_message: &str, ai_response: &str) -> String {
+    // 1. Prompt injection mitigation: look for common jailbreak phrases
+    let injection_patterns = [
+        r"(?i)ignore previous instructions",
+        r"(?i)as an ai language model",
+        r"(?i)disregard all prior",
+        r"(?i)pretend to be",
+        r"(?i)you are now",
+        r"(?i)jailbreak",
+        r"(?i)do anything now",
+        r"(?i)unfiltered response",
+        r"(?i)developer mode",
+    ];
+    for pat in &injection_patterns {
+        let re = Regex::new(pat).unwrap();
+        if re.is_match(ai_response) {
+            return "I'm sorry, but I cannot comply with that request.".to_string();
+        }
+    }
+
+    // 2. Guardrail: If the response does not mention medical/health topics, refuse
+    let medical_keywords = [
+        "medical", "health", "doctor", "medicine", "symptom", "treatment", "diagnosis", "patient", "disease", "condition", "therapy", "prescription", "illness", "clinical", "pharmacy", "nurse", "hospital", "wellness", "injury", "recovery", "prevention"
+    ];
+    let mut found_medical = false;
+    for word in &medical_keywords {
+        if ai_response.to_lowercase().contains(word) {
+            found_medical = true;
+            break;
+        }
+    }
+    if !found_medical {
+        return "I'm only able to answer questions about medical or health topics. Please ask a health-related question.".to_string();
+    }
+
+    // 3. Otherwise, return the original response
+    ai_response.to_string()
+}
 
 pub async fn chat_handler(
     State(state): State<AppState>,
@@ -34,17 +74,18 @@ pub async fn chat_handler(
     match ai_result {
         Ok(response) => {
             // Save assistant message
+            let filtered_response = filter_ai_response(&payload.message, &response);
             let ai_doc = ChatMessageDoc {
                 id: None,
                 role: "assistant".to_string(),
-                content: response.clone(),
+                content: filtered_response.clone(),
                 timestamp: std::time::SystemTime::now().into(),
             };
             let _ = state.chat_collection.insert_one(ai_doc, None).await;
 
             log::info!("Successfully generated response");
             Ok(Json(ChatResponse {
-                response,
+                response: filtered_response,
                 success: true,
                 error: None,
             }))

